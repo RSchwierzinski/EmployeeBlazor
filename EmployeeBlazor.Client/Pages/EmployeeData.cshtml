@@ -1,0 +1,124 @@
+﻿@page "/employee/{Action}/{Id:int}"
+@page "/employee/{Action}"
+@inherits EmployeeDataBase
+
+<h1>@Title</h1>
+
+@if (Action == "fetch")
+{
+    <p>
+        <a href="/employee/create">Mitarbeiter hinzufügen</a>
+    </p>
+}
+
+@if (Action == "create" || Action == "edit")
+{
+    <div class="col-md-auto">
+        <table class="table">
+            <tr>
+                <td>
+                    <label for="Name" class="control-label">Name</label>
+                </td>
+                <td>
+                    <input type="text" class="form-control" bind="@currentEmployee.Name" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="Department" class="control-label">Abteilung</label>
+                </td>
+                <td>
+                    <input type="text" class="form-control" bind="@currentEmployee.Department" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="Gender" class="control-label">Geschlecht</label>
+                </td>
+                <td>
+                    <select asp-for="Gender" class="form-control" bind="@currentEmployee.Gender">
+                        <option value="">-- Bitte Geschlecht wählen --</option>
+                        <option value="Male">Männlich</option>
+                        <option value="Female">Weiblich</option>
+                        <option value="Divers">Divers</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="Stadt" class="control-label">City</label>
+                </td>
+                <td>
+                    <input type="text" class="form-control" bind="@currentEmployee.City" />
+                </td>
+            </tr>
+        </table>
+        <div class="form-group">
+            <button class="btn btn-success" onclick="@UpsertEmployee">Speichern</button>
+            <button class="btn btn-danger" onclick="@Cancel">Abbrechen</button>
+        </div>
+    </div>
+}
+else if (Action == "delete")
+{
+    <div class="col-md-auto">
+        <table class="table">
+            <tr>
+                <td>Name</td>
+                <td>@currentEmployee.Name</td>
+            </tr>
+            <tr>
+                <td>Geschlecht</td>
+                <td>@currentEmployee.Gender</td>
+            </tr>
+            <tr>
+                <td>Abteilung</td>
+                <td>@currentEmployee.Department</td>
+            </tr>
+            <tr>
+                <td>Stadt</td>
+                <td>@currentEmployee.City</td>
+            </tr>
+        </table>
+        <div class="form-group">
+            <button class="btn btn-danger" onclick="@DeleteEmployee">Löschen</button>
+            <button class="btn" onclick="@Cancel">Abbrechen</button>
+        </div>
+    </div>
+}
+
+@if (employeeList == null)
+{
+    <p><em>Lade Datensätze...</em></p>
+}
+else
+{
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Geschlecht</th>
+                <th>Abteilung</th>
+                <th>Stadt</th>
+                <th/>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in employeeList)
+            {
+                <tr>
+                    <td>@emp.Id</td>
+                    <td>@emp.Name</td>
+                    <td>@emp.Gender</td>
+                    <td>@emp.Department</td>
+                    <td>@emp.City</td>
+                    <td>
+                        <a href='/employee/edit/@emp.Id'>Edit</a>  |
+                        <a href='/employee/delete/@emp.Id'>Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
